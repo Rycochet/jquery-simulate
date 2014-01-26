@@ -60,7 +60,7 @@ $.extend($.simulate.prototype, {
 			evt.initMouseEvent(type, e.bubbles, e.cancelable, e.view, e.detail,
 				e.screenX, e.screenY, e.clientX, e.clientY,
 				e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
-				e.button, e.relatedTarget || document.body.parentNode);
+				e.button, (e.relatedTarget === void 0) ? document.body.parentNode : e.relatedTarget);
 		} else if (document.createEventObject) {
 			evt = document.createEventObject();
 			$.extend(evt, e);
