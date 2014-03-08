@@ -72,16 +72,24 @@ $.extend($.simulate.prototype, {
 		var evt;
 
 		var e = $.extend({ bubbles: true, cancelable: true, view: window,
-			ctrlKey: false, altKey: false, shiftKey: false, metaKey: false,
-			keyCode: 0, charCode: 0
+			ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, altGraphKey: false,
+			keyCode: 0, charCode: 0, keyIdentifier: "", keyLocation: 0
 		}, options);
 
 		if ($.isFunction(document.createEvent)) {
 			try {
-				evt = document.createEvent("KeyEvents");
-				evt.initKeyEvent(type, e.bubbles, e.cancelable, e.view,
-					e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
-					e.keyCode, e.charCode);
+				try {
+					evt = document.createEvent("KeyEvents");
+					evt.initKeyEvent(type, e.bubbles, e.cancelable, e.view,
+						e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
+						e.keyCode, e.charCode);
+				} catch(err) {
+					evt = document.createEvent("KeyboardEvent");
+					evt.initKeyboardEvent(type, e.bubbles, e.cancelable, e.view,
+						e.keyIdentifier, e.keyLocation,
+						e.ctrlKey, e.altKey, e.shiftKey, e.metaKey, e.altGraphKey);
+					$.extend(evt, { keyCode: e.keyCode, charCode: e.charCode });
+				}
 			} catch(err) {
 				evt = document.createEvent("Events");
 				evt.initEvent(type, e.bubbles, e.cancelable);
